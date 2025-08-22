@@ -38,7 +38,7 @@ function CheckoutButton({ cart }) {
     console.log("Checkout products:", products);
 
     // 3. Send full product data to backend
-    const res = await fetch("http://localhost:4242/create-checkout-session", {
+    const res = await fetch("https://qrserverrtp-ewcxg5hscaekacfs.eastus-01.azurewebsites.net/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart: products }),
