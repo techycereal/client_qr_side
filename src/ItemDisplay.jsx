@@ -38,7 +38,7 @@ function ItemDisplay({data, addToCart}) {
           {/* Add to Cart Button */}
           <button
             onClick={() => addToCart(data.id)}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            className="mt-4 px-4 py-2 bg-[#A26734] text-white font-semibold rounded-lg transition"
           >
             Add to Cart
           </button>

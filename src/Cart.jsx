@@ -51,7 +51,8 @@ function CheckoutButton({ cart }) {
   return (
     <button
       onClick={handleCheckout}
-      className="bg-blue-600 text-white px-4 py-2 rounded"
+      className="bg-[#EFEEDF] text-black px-4 py-2 rounded disabled:opacity-50"
+      disabled={cart.length == 0}
     >
       Pay Now
     </button>
