@@ -42,7 +42,7 @@ function Home() {
     });
 
     setShowMessage(true);
-    setTimeout(() => setShowMessage(false), 2000);
+    setTimeout(() => setShowMessage(false), 1000);
   };
 
   const totalPrice = cart.reduce(
