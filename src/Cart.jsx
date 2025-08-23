@@ -1,60 +1,59 @@
+import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "./lib/firebase"; // make sure this is your firestore init
-
 const stripePromise = loadStripe(
-  "pk_test_51RyOWF2LE82Zh4W3x9JYGxk89AH5ZDDyoTRmiUcu5NZyf2u103bu2bJSICn3I3HonNaFuUrYjxKNX9XuBj2j2ZIk00KkuxOtNK"
+  "pk_live_51RyOW3Ru5Jr5aWYDtqy5TMeBhDZ4L0RDl2imCCZGsq8Zj7skhGcdzodFCLnr9otbgh5jF4pHqnoO3CLtXGkkLxOg00j3cpCw7l"
 );
 
 function CheckoutButton({ cart }) {
-  const handleCheckout = async () => {
-    const stripe = await stripePromise;
+  const [loading, setLoading] = useState(false);
 
+  const handleCheckout = async () => {
     if (cart.length === 0) {
       alert("Cart is empty!");
       return;
     }
 
-    // 1. Get product data from Firestore for all items in the cart
-    const productsRef = collection(db, "products");
-    const q = query(
-      productsRef,
-      where("__name__", "in", cart.map((item) => item.id))
-    );
-    const querySnapshot = await getDocs(q);
+    setLoading(true);
 
-    // 2. Merge Firestore data (name, price) with cart (quantity)
-    const products = querySnapshot.docs.map((doc) => {
-      const productData = doc.data();
-      const cartItem = cart.find((item) => item.id === doc.id);
+    try {
+      const stripe = await stripePromise;
 
-      return {
-        name: productData.name,
-        price: productData.price,
-        quantity: cartItem?.quantity || 1, // fallback just in case
-      };
-    });
+      const products = cart.map((item) => ({
+  id: item.id,
+  quantity: item.quantity,
+}));
 
-    console.log("Checkout products:", products);
+const res = await fetch(
+  "https://qrserverrtp-ewcxg5hscaekacfs.eastus-01.azurewebsites.net/create-checkout-session",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cart: products }),
+  }
+);
 
-    // 3. Send full product data to backend
-    const res = await fetch("https://qrserverrtp-ewcxg5hscaekacfs.eastus-01.azurewebsites.net/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart: products }),
-    });
-
-    const { id } = await res.json();
-    await stripe.redirectToCheckout({ sessionId: id });
+      const { id } = await res.json();
+      await stripe.redirectToCheckout({ sessionId: id });
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setLoading(false);
+    }
   };
 
   return (
     <button
       onClick={handleCheckout}
-      className="bg-[#EFEEDF] text-black px-4 py-2 rounded disabled:opacity-50"
-      disabled={cart.length == 0}
+      className="bg-[#EFEEDF] text-black px-4 py-2 rounded flex items-center justify-center disabled:opacity-50 min-w-[100px]"
+      disabled={cart.length === 0 || loading}
     >
-      Pay Now
+      {loading ? (
+        <>
+          <div className="w-5 h-5 border-2 border-gray-400 border-t-black rounded-full animate-spin"></div>
+          <span className="sr-only">Processing...</span> {/* invisible text for screen readers */}
+        </>
+      ) : (
+        "Pay Now"
+      )}
     </button>
   );
 }
