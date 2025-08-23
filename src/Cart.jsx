@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
-  "pk_test_51RyOWF2LE82Zh4W3x9JYGxk89AH5ZDDyoTRmiUcu5NZyf2u103bu2bJSICn3I3HonNaFuUrYjxKNX9XuBj2j2ZIk00KkuxOtNK"
+  "pk_live_51RyOW3Ru5Jr5aWYDtqy5TMeBhDZ4L0RDl2imCCZGsq8Zj7skhGcdzodFCLnr9otbgh5jF4pHqnoO3CLtXGkkLxOg00j3cpCw7l"
 );
 
 function CheckoutButton({ cart }) {
