@@ -84,13 +84,19 @@ function Home() {
                       <div className="flex gap-2">
                         <span>${item.price * item.quantity}</span>
                         <button
-                          onClick={() =>
-                            setCart((prev) => prev.filter((i) => i.id !== item.id))
-                          }
-                          className="bg-red-500 hover:bg-red-600 text-white w-8 h-8 flex items-center justify-center rounded-full"
-                        >
-                          -
-                        </button>
+  onClick={() =>
+    setCart((prev) =>
+      prev
+        .map((i) =>
+          i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i
+        )
+        .filter((i) => i.quantity > 0)
+    )
+  }
+  className="bg-red-500 hover:bg-red-600 text-white w-8 h-8 flex items-center justify-center rounded-full"
+>
+  -
+</button>
                       </div>
                     </li>
                   ))}
