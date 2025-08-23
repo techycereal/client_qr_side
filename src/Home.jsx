@@ -8,7 +8,7 @@ function Home() {
   const [data, setData] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true); // <-- loading state
-
+  const [showMessage, setShowMessage] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,6 +40,9 @@ function Home() {
         ];
       }
     });
+
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 2000);
   };
 
   const totalPrice = cart.reduce(
@@ -112,6 +115,11 @@ function Home() {
           </>
         )}
       </main>
+      {showMessage && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-[#B8C6A0] text-white px-6 py-3 rounded-lg shadow-lg animate-fadeIn">
+          Item added to cart
+        </div>
+      )}
     </div>
   );
 }
